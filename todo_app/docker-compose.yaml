@@ -11,3 +11,10 @@ services:
       - 9001:5000
     volumes:
       - ./src/server:/root/project
+  db:
+    image: postgres:alpine
+    tty: true
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: Password!

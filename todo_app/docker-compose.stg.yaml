@@ -1,0 +1,36 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    tty: true
+    # restart: always
+    depends_on:
+      - app
+    ports: # host:guest
+      - "9001:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/log:/var/log/nginx # ログ
+      - ./docker/nginx/logrotate.d/nginx:/etc/logrotate.d/nginx
+      - ./src/server:/root/project/server
+  session:
+    image: redis:alpine
+    tty: true
+    depends_on:
+      - app
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/nim/Dockerfile
+    tty: true
+    volumes:
+      - ./src/server:/root/project
+  db:
+    image: postgres:alpine
+    tty: true
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: Password!

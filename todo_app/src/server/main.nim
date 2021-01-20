@@ -1,3 +1,4 @@
+import re
 # framework
 import basolato
 # controller
@@ -8,10 +9,10 @@ import app/controllers/post_controller
 import app/middlewares/auth_middleware
 
 var routes = newRoutes()
-routes.middleware(".*", auth_middleware.checkCsrfTokenMiddleware)
+routes.middleware(re".*", auth_middleware.checkCsrfTokenMiddleware)
 routes.middleware(
-  "^(?!.*(signin|signup|delete-account)).*$",
-  auth_middleware.chrckAuthTokenMiddleware
+  re"^(?!.*(signin|signup|delete-account)).*$",
+  auth_middleware.checkSessionIdMiddleware
 )
 
 routes.get("/signup", sign_controller.signUpPage)
